@@ -27,7 +27,7 @@ kbd { border: 1px solid #8e64ff; border-radius: 2px; color: white; font-family: 
   .game-shell { align-content: start; display: grid; grid-template-rows: auto auto minmax(0, 1fr); height: 100dvh; padding: max(10px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom)); }
   .masthead { margin-bottom: 8px; }.eyebrow, .tagline { font-size: 8px; }.masthead h1 { font-size: clamp(25px, 9vw, 42px); margin: 4px 0; }
   .dashboard { margin-bottom: 8px; }.dashboard div { padding: 5px 8px; }.dashboard strong { font-size: 16px; }
-  .playfield { align-self: center; justify-self: center; aspect-ratio: 1; height: 100%; max-height: 100%; max-width: 100%; min-height: 0; min-width: 0; }
+  .playfield { align-self: center; justify-self: center; aspect-ratio: 1; width: 100%; max-width: min(720px, calc(100dvh - 150px - env(safe-area-inset-top) - env(safe-area-inset-bottom))); min-height: 0; min-width: 0; }
   #game { touch-action: none; }.controls, .desktop-hint { display: none; }
   .overlay-action { min-height: 48px; touch-action: manipulation; }
 }
