@@ -23,12 +23,20 @@ let touchStart = null;
 const playfield = document.querySelector('.playfield');
 new ResizeObserver((entries) => {
   const { width, height } = entries[0].contentRect;
-  const size = Math.min(width, height); // playfield is square by CSS
-  if (size <= 0) return;
+  if (width <= 0 || height <= 0) return;
   const dpr = window.devicePixelRatio || 1;
-  canvas.width  = Math.round(size * dpr);
-  canvas.height = Math.round(size * dpr);
+  canvas.width  = Math.round(width * dpr);
+  canvas.height = Math.round(height * dpr);
+  
   cell = canvas.width / game.columns;
+  const newRows = Math.floor(canvas.height / cell);
+  
+  if (game.rows !== newRows) {
+    game.rows = newRows;
+    game.reset();
+    updateHud();
+    updateOverlay();
+  }
 }).observe(playfield);
 
 bestElement.textContent = String(best).padStart(3, '0');
@@ -52,9 +60,12 @@ function updateHud() {
 function drawGrid(time) {
   context.fillStyle = '#080912'; context.fillRect(0, 0, canvas.width, canvas.height);
   context.strokeStyle = 'rgba(130, 64, 225, .19)'; context.lineWidth = 1;
-  for (let i = 0; i <= game.columns; i += 1) {
-    const offset = i * cell + .5;
+  for (let x = 0; x <= game.columns; x += 1) {
+    const offset = x * cell + .5;
     context.beginPath(); context.moveTo(offset, 0); context.lineTo(offset, canvas.height); context.stroke();
+  }
+  for (let y = 0; y <= game.rows; y += 1) {
+    const offset = y * cell + .5;
     context.beginPath(); context.moveTo(0, offset); context.lineTo(canvas.width, offset); context.stroke();
   }
   context.fillStyle = `rgba(60, 10, 105, ${.12 + Math.sin(time / 700) * .05})`; context.fillRect(0, 0, canvas.width, canvas.height);
