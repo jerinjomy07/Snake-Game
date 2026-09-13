@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Share+Tech+Mono&display=swap');
+
+:root { color-scheme: dark; }
+* { box-sizing: border-box; }
+body { align-items: center; background: #06060b; color: #e9ffff; display: flex; font-family: 'Orbitron', sans-serif; justify-content: center; margin: 0; min-height: 100vh; overflow: auto; }
+body::before, body::after { content: ''; inset: 0; pointer-events: none; position: fixed; }
+body::before { background: linear-gradient(rgba(6, 6, 11, .67), rgba(6, 6, 11, .87)), repeating-linear-gradient(90deg, transparent 0 47px, rgba(127, 22, 255, .09) 48px 49px), repeating-linear-gradient(0deg, transparent 0 47px, rgba(0, 255, 179, .055) 48px 49px); }
+body::after { background: radial-gradient(ellipse at 50% 45%, rgba(18, 0, 48, .35), transparent 58%); }
+.game-shell { padding: 26px 20px 20px; position: relative; text-align: center; width: min(850px, 100%); z-index: 1; }
+.masthead { margin-bottom: 20px; }
+.eyebrow, .tagline { color: #a77cff; font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: .32em; margin: 0; }
+h1 { font-size: clamp(32px, 6vw, 54px); letter-spacing: .17em; line-height: 1; margin: 7px 0; padding-left: .17em; text-shadow: 0 0 14px #b43cff, 0 0 38px rgba(180, 60, 255, .55); }
+h1 span { color: #68ff9d; text-shadow: 0 0 14px #00ff71, 0 0 36px rgba(0, 255, 113, .72); }
+.dashboard { border: 1px solid rgba(150, 89, 255, .48); box-shadow: 0 0 18px rgba(132, 61, 255, .16), inset 0 0 18px rgba(117, 48, 255, .06); display: grid; grid-template-columns: repeat(3, 1fr); margin: 0 auto 14px; max-width: 720px; }
+.dashboard div { padding: 9px 12px 8px; position: relative; }.dashboard div + div::before { background: linear-gradient(transparent, #7445d6, transparent); content: ''; height: 70%; left: 0; position: absolute; top: 15%; width: 1px; }
+.dashboard span { color: #ab90df; display: block; font-family: 'Share Tech Mono', monospace; font-size: 10px; letter-spacing: .18em; }.dashboard strong { color: #efffff; font-size: 21px; letter-spacing: .08em; text-shadow: 0 0 8px #84eaff; }
+.playfield { aspect-ratio: 1; border: 1px solid #6733bf; box-shadow: 0 0 0 3px #0c0714, 0 0 24px rgba(126, 39, 255, .6), inset 0 0 40px rgba(31, 6, 60, .68); margin: auto; max-width: 720px; overflow: hidden; position: relative; }
+canvas { display: block; height: 100%; width: 100%; }.scanline { background: repeating-linear-gradient(0deg, rgba(255,255,255,.024), rgba(255,255,255,.024) 1px, transparent 1px, transparent 4px); inset: 0; mix-blend-mode: overlay; pointer-events: none; position: absolute; }
+.touch-controls { display: none; }
+.overlay { align-items: center; background: rgba(4, 3, 10, .7); display: flex; flex-direction: column; inset: 0; justify-content: center; position: absolute; transition: opacity .18s ease; }.overlay.hidden { opacity: 0; pointer-events: none; }
+.overlay-kicker { color: #ad86ff; font-family: 'Share Tech Mono', monospace; font-size: 12px; letter-spacing: .3em; margin: 0 0 7px; }h2 { color: #6aff9e; font-size: clamp(31px, 7vw, 58px); letter-spacing: .17em; margin: 0; padding-left: .17em; text-shadow: 0 0 12px #00ff71, 0 0 30px #00ff71; }.overlay p:last-child { color: #d6c8ff; font-family: 'Share Tech Mono', monospace; font-size: 13px; letter-spacing: .1em; }
+kbd { border: 1px solid #8e64ff; border-radius: 2px; color: white; font-family: inherit; padding: 2px 5px; }
+.controls { align-items: center; color: #b29bcf; display: flex; font-family: 'Share Tech Mono', monospace; font-size: 10px; justify-content: center; letter-spacing: .08em; margin-top: 17px; text-wrap: balance; }.controls b { color: #69fda0; font-weight: 400; }.controls i { background: #743aff; box-shadow: 0 0 6px #743aff; height: 14px; margin: 0 13px; width: 1px; }
+@media (max-width: 560px) { .game-shell { padding: 18px 12px; } .controls { font-size: 8px; } .controls i { margin: 0 5px; } .dashboard strong { font-size: 18px; } }
+@media (max-width: 700px), (pointer: coarse) {
+  body { min-height: 100dvh; overflow: hidden; }
+  .game-shell { align-content: start; display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto; height: 100dvh; padding: max(10px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom)); }
+  .masthead { margin-bottom: 8px; }.eyebrow, .tagline { font-size: 8px; }.masthead h1 { font-size: clamp(25px, 9vw, 42px); margin: 4px 0; }
+  .dashboard { margin-bottom: 8px; }.dashboard div { padding: 5px 8px; }.dashboard strong { font-size: 16px; }
+  .playfield { align-self: center; max-height: calc(100dvh - 282px); width: min(100%, calc(100dvh - 282px)); }
+  .touch-controls { align-items: center; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 10px auto 0; max-width: 430px; width: 100%; }
+  .touch-stack { display: grid; gap: 8px; grid-template-columns: 1fr 1fr; }.touch-stack button:first-child { grid-column: 1 / -1; }
+  .touch-controls button { background: rgba(55, 16, 99, .72); border: 1px solid #8b57f2; box-shadow: 0 0 14px rgba(144, 74, 255, .3), inset 0 0 14px rgba(95, 37, 178, .22); color: #70ffa6; font: 700 28px/1 'Orbitron', sans-serif; min-height: 64px; text-shadow: 0 0 10px #00ff72; touch-action: none; }
+  .touch-controls button:active { background: rgba(0, 174, 83, .42); box-shadow: 0 0 20px #00ff72; transform: scale(.96); }
+  #game { touch-action: none; }.controls { display: none; }
+}

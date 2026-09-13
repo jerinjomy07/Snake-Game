@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#07070d" />
+    <title>Neon Serpent — Cyberpunk Snake</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="icons/icon.svg" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="game-shell">
+      <header class="masthead">
+        <p class="eyebrow">ARCADE SYSTEM // 2089</p>
+        <h1>NEON <span>SERPENT</span></h1>
+        <p class="tagline">KEEP THE SIGNAL ALIVE</p>
+      </header>
+      <section class="dashboard" aria-label="Game statistics">
+        <div><span>SCORE</span><strong id="score">000</strong></div>
+        <div><span>LEVEL</span><strong id="level">01</strong></div>
+        <div><span>BEST</span><strong id="best">000</strong></div>
+      </section>
+      <section class="playfield" aria-label="Cyberpunk Snake game">
+        <canvas id="game" width="720" height="720" aria-label="Game board"></canvas>
+        <div class="scanline"></div>
+        <div class="overlay" id="overlay" role="status">
+          <p class="overlay-kicker">SYSTEM READY</p><h2>JACK IN</h2><p>Press <kbd>SPACE</kbd> to start</p>
+        </div>
+      </section>
+      <section class="touch-controls" aria-label="Touch controls">
+        <button data-direction="left" aria-label="Move left">←</button>
+        <div class="touch-stack">
+          <button data-direction="up" aria-label="Move up">↑</button>
+          <button data-direction="down" aria-label="Move down">↓</button>
+        </div>
+        <button data-direction="right" aria-label="Move right">→</button>
+      </section>
+      <footer class="controls" aria-label="Keyboard controls">
+        <span><b>↑ ↓ ← →</b> / <b>W A S D</b> MOVE</span><i></i><span><b>SPACE</b> START / RESTART</span><i></i><span><b>ESC</b> PAUSE</span>
+      </footer>
+    </main>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

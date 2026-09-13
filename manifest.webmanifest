@@ -1,0 +1,13 @@
+{
+  "name": "Neon Serpent",
+  "short_name": "Serpent",
+  "description": "A neon cyberpunk Snake game.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#06060b",
+  "theme_color": "#07070d",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
