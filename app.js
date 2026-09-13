@@ -22,9 +22,9 @@ const keyDirections = { ArrowUp: 'up', w: 'up', W: 'up', ArrowRight: 'right', d:
 function updateOverlay() {
   if (game.status === 'playing') { overlay.classList.add('hidden'); return; }
   overlay.classList.remove('hidden');
-  if (game.status === 'paused') overlay.innerHTML = '<p class="overlay-kicker">SIGNAL ON HOLD</p><h2>PAUSED</h2><p>Press <kbd>SPACE</kbd> to resume</p>';
-  else if (game.status === 'gameover') overlay.innerHTML = `<p class="overlay-kicker">CONNECTION LOST</p><h2>GAME OVER</h2><p>SCORE ${String(game.score).padStart(3, '0')} · Press <kbd>SPACE</kbd> to reboot</p>`;
-  else overlay.innerHTML = '<p class="overlay-kicker">SYSTEM READY</p><h2>JACK IN</h2><p>Press <kbd>SPACE</kbd> to start</p>';
+  if (game.status === 'paused') overlay.innerHTML = '<p class="overlay-kicker">SIGNAL ON HOLD</p><h2>PAUSED</h2><button class="overlay-action" data-action="play">TAP TO RESUME</button><p class="desktop-hint">Press <kbd>SPACE</kbd> to resume</p>';
+  else if (game.status === 'gameover') overlay.innerHTML = `<p class="overlay-kicker">CONNECTION LOST</p><h2>GAME OVER</h2><button class="overlay-action" data-action="play">TAP TO REBOOT</button><p class="desktop-hint">SCORE ${String(game.score).padStart(3, '0')} · Press <kbd>SPACE</kbd> to reboot</p>`;
+  else overlay.innerHTML = '<p class="overlay-kicker">SYSTEM READY</p><h2>JACK IN</h2><button class="overlay-action" data-action="play">TAP TO START</button><p class="desktop-hint">Press <kbd>SPACE</kbd> to start</p>';
 }
 
 function updateHud() {
@@ -78,6 +78,13 @@ function handleDirection(direction) {
   game.setDirection(direction);
   updateOverlay();
 }
+function startOrRestart() {
+  if (game.status === 'gameover') game.reset();
+  game.start();
+  elapsed = 0;
+  updateHud();
+  updateOverlay();
+}
 function loop(time) {
   const delta = time - lastFrame; lastFrame = time;
   if (game.status === 'playing') {
@@ -98,7 +105,7 @@ function loop(time) {
 window.addEventListener('keydown', (event) => {
   const direction = keyDirections[event.key];
   if (direction) { event.preventDefault(); handleDirection(direction); return; }
-  if (event.code === 'Space') { event.preventDefault(); if (game.status === 'gameover') game.reset(); game.start(); elapsed = 0; updateHud(); updateOverlay(); }
+  if (event.code === 'Space') { event.preventDefault(); startOrRestart(); }
   if (event.key === 'Escape') { game.pause(); updateOverlay(); }
 });
 
@@ -113,6 +120,9 @@ canvas.addEventListener('pointerup', (event) => {
 canvas.addEventListener('pointercancel', () => { touchStart = null; });
 document.querySelectorAll('[data-direction]').forEach((button) => {
   button.addEventListener('pointerdown', (event) => { event.preventDefault(); handleDirection(button.dataset.direction); });
+});
+overlay.addEventListener('pointerdown', (event) => {
+  if (event.target.closest('[data-action="play"]')) startOrRestart();
 });
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('./service-worker.js').catch(() => {});
