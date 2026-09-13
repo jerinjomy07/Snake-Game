@@ -1,4 +1,4 @@
-const CACHE = 'neon-serpent-v4';
+const CACHE = 'neon-serpent-v5';
 const SHELL = ['./', './index.html', './styles.css', './game.js', './input.js', './audio.js', './manifest.webmanifest', './icons/icon.svg'];
 
 self.addEventListener('install', (event) => {
