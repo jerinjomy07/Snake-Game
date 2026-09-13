@@ -22,9 +22,9 @@ const keyDirections = { ArrowUp: 'up', w: 'up', W: 'up', ArrowRight: 'right', d:
 function updateOverlay() {
   if (game.status === 'playing') { overlay.classList.add('hidden'); return; }
   overlay.classList.remove('hidden');
-  if (game.status === 'paused') overlay.innerHTML = '<p class="overlay-kicker">SIGNAL ON HOLD</p><h2>PAUSED</h2><button class="overlay-action" data-action="play">TAP TO RESUME</button><p class="desktop-hint">Press <kbd>SPACE</kbd> to resume</p>';
-  else if (game.status === 'gameover') overlay.innerHTML = `<p class="overlay-kicker">CONNECTION LOST</p><h2>GAME OVER</h2><button class="overlay-action" data-action="play">TAP TO REBOOT</button><p class="desktop-hint">SCORE ${String(game.score).padStart(3, '0')} · Press <kbd>SPACE</kbd> to reboot</p>`;
-  else overlay.innerHTML = '<p class="overlay-kicker">SYSTEM READY</p><h2>JACK IN</h2><button class="overlay-action" data-action="play">TAP TO START</button><p class="desktop-hint">Press <kbd>SPACE</kbd> to start</p>';
+  if (game.status === 'paused') overlay.innerHTML = '<p class="overlay-kicker">SIGNAL ON HOLD</p><h2>PAUSED</h2><button class="overlay-action" data-action="play">TAP TO RESUME</button>';
+  else if (game.status === 'gameover') overlay.innerHTML = `<p class="overlay-kicker">CONNECTION LOST</p><h2>GAME OVER</h2><p class="overlay-score">SCORE ${String(game.score).padStart(3, '0')}</p><button class="overlay-action" data-action="play">TAP TO REBOOT</button>`;
+  else overlay.innerHTML = '<p class="overlay-kicker">SYSTEM READY</p><h2>JACK IN</h2><button class="overlay-action" data-action="play">TAP TO START</button>';
 }
 
 function updateHud() {
