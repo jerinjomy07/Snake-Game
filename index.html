@@ -8,7 +8,7 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="apple-touch-icon" href="icons/icon.svg" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <link rel="stylesheet" href="styles.css?v=5" />
+    <link rel="stylesheet" href="styles.css?v=6" />
   </head>
   <body>
     <main class="game-shell">
@@ -23,22 +23,13 @@
         <div><span>BEST</span><strong id="best">000</strong></div>
       </section>
       <section class="playfield" aria-label="Cyberpunk Snake game">
-        <canvas id="game" width="720" height="720" aria-label="Game board"></canvas>
+        <canvas id="game" width="960" height="960" aria-label="Game board"></canvas>
         <div class="scanline"></div>
         <div class="overlay" id="overlay" role="status">
           <p class="overlay-kicker">SYSTEM READY</p><h2>JACK IN</h2><p>Press <kbd>SPACE</kbd> to start</p>
         </div>
       </section>
-      <section class="touch-controls" aria-label="Touch controls">
-        <button data-direction="left" aria-label="Move left">←</button>
-        <div class="touch-stack">
-          <button data-direction="up" aria-label="Move up">↑</button>
-          <button data-direction="down" aria-label="Move down">↓</button>
-        </div>
-        <button data-direction="right" aria-label="Move right">→</button>
-      </section>
-
     </main>
-    <script type="module" src="app.js"></script>
+    <script type="module" src="app.js?v=6"></script>
   </body>
 </html>

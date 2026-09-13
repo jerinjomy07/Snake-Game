@@ -8,7 +8,7 @@ const scoreElement = document.querySelector('#score');
 const levelElement = document.querySelector('#level');
 const bestElement = document.querySelector('#best');
 const overlay = document.querySelector('#overlay');
-const game = new SnakeGame({ columns: 24, rows: 24 });
+const game = new SnakeGame({ columns: 32, rows: 32 });
 const sounds = new SoundEffects();
 const cell = canvas.width / game.columns;
 let lastFrame = 0;
@@ -63,10 +63,11 @@ function drawFood(time) {
 }
 
 function drawSnake() {
+  const pad = Math.max(2, Math.round(cell * 0.08));
   game.snake.slice().reverse().forEach((part, index, parts) => {
     const x = part.x * cell; const y = part.y * cell; const isHead = index === parts.length - 1;
-    context.save(); context.shadowBlur = isHead ? 24 : 16; context.shadowColor = '#00ff72'; context.fillStyle = isHead ? '#bcffd0' : '#39ed79'; context.fillRect(x + 3, y + 3, cell - 6, cell - 6);
-    context.fillStyle = isHead ? '#00d85c' : '#0cac47'; context.fillRect(x + 6, y + 6, cell - 12, cell * .18);
+    context.save(); context.shadowBlur = isHead ? 24 : 16; context.shadowColor = '#00ff72'; context.fillStyle = isHead ? '#bcffd0' : '#39ed79'; context.fillRect(x + pad, y + pad, cell - pad * 2, cell - pad * 2);
+    context.fillStyle = isHead ? '#00d85c' : '#0cac47'; context.fillRect(x + pad * 2, y + pad * 2, cell - pad * 4, cell * .18);
     if (isHead) { context.fillStyle = '#ffffff'; context.fillRect(x + cell * .67, y + cell * .29, cell * .12, cell * .12); }
     context.restore();
   });
@@ -118,9 +119,6 @@ canvas.addEventListener('pointerup', (event) => {
   touchStart = null;
 });
 canvas.addEventListener('pointercancel', () => { touchStart = null; });
-document.querySelectorAll('[data-direction]').forEach((button) => {
-  button.addEventListener('pointerdown', (event) => { event.preventDefault(); handleDirection(button.dataset.direction); });
-});
 overlay.addEventListener('pointerdown', (event) => {
   if (event.target.closest('[data-action="play"]')) startOrRestart();
 });
