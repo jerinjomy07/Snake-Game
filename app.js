@@ -10,11 +10,26 @@ const bestElement = document.querySelector('#best');
 const overlay = document.querySelector('#overlay');
 const game = new SnakeGame({ columns: 20, rows: 20 });
 const sounds = new SoundEffects();
-const cell = canvas.width / game.columns;
+let cell = 0; // recomputed on every resize via ResizeObserver
 let lastFrame = 0;
 let elapsed = 0;
 let best = Number(localStorage.getItem('neon-serpent-best') || 0);
 let touchStart = null;
+
+// Decouple drawing-buffer resolution from CSS display size.
+// The canvas has no width/height HTML attributes, so the layout is driven
+// entirely by CSS. ResizeObserver measures the rendered .playfield square
+// and sets canvas.width/height = size × DPR, giving crisp HiDPI output.
+const playfield = document.querySelector('.playfield');
+new ResizeObserver((entries) => {
+  const { width, height } = entries[0].contentRect;
+  const size = Math.min(width, height); // playfield is square by CSS
+  if (size <= 0) return;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width  = Math.round(size * dpr);
+  canvas.height = Math.round(size * dpr);
+  cell = canvas.width / game.columns;
+}).observe(playfield);
 
 bestElement.textContent = String(best).padStart(3, '0');
 const keyDirections = { ArrowUp: 'up', w: 'up', W: 'up', ArrowRight: 'right', d: 'right', D: 'right', ArrowDown: 'down', s: 'down', S: 'down', ArrowLeft: 'left', a: 'left', A: 'left' };
@@ -73,7 +88,7 @@ function drawSnake() {
   });
 }
 
-function draw(time) { drawGrid(time); drawFood(time); drawSnake(); }
+function draw(time) { if (!cell) return; drawGrid(time); drawFood(time); drawSnake(); }
 function handleDirection(direction) {
   if (game.status !== 'playing') game.start();
   game.setDirection(direction);
