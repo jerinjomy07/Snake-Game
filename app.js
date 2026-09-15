@@ -8,11 +8,14 @@ const scoreElement = document.querySelector('#score');
 const levelElement = document.querySelector('#level');
 const bestElement = document.querySelector('#best');
 const overlay = document.querySelector('#overlay');
+const themeBtn = document.querySelector('#theme-btn');
+const themeLabelElement = document.querySelector('#theme-label');
 const game = new SnakeGame({ columns: 20, rows: 20 });
 const sounds = new SoundEffects();
 const themes = [
   {
     name: 'default',
+    label: 'NEON',
     gridBg: '#080912',
     gridLine: 'rgba(130, 64, 225, .19)',
     gridPulse: (time) => `rgba(60, 10, 105, ${.12 + Math.sin(time / 700) * .05})`,
@@ -24,6 +27,7 @@ const themes = [
   },
   {
     name: 'synthwave',
+    label: 'SYNTH',
     gridBg: '#0a0310',
     gridLine: 'rgba(255, 0, 128, .19)',
     gridPulse: (time) => `rgba(120, 0, 60, ${.12 + Math.sin(time / 700) * .05})`,
@@ -35,7 +39,18 @@ const themes = [
   }
 ];
 let currentTheme = Number(localStorage.getItem('neon-serpent-theme') || 0);
-if (themes[currentTheme].name !== 'default') document.body.className = `theme-${themes[currentTheme].name}`;
+
+function applyTheme(index) {
+  currentTheme = index % themes.length;
+  const theme = themes[currentTheme];
+  document.body.className = theme.name === 'default' ? '' : `theme-${theme.name}`;
+  if (themeLabelElement) {
+    themeLabelElement.textContent = theme.label;
+  }
+  localStorage.setItem('neon-serpent-theme', String(currentTheme));
+}
+
+applyTheme(currentTheme);
 
 let cell = 0; // recomputed on every resize via ResizeObserver
 let lastFrame = 0;
@@ -178,10 +193,14 @@ canvas.addEventListener('pointercancel', () => { touchStart = null; });
 overlay.addEventListener('pointerdown', (event) => {
   if (event.target.closest('[data-action="play"]')) startOrRestart();
 });
-document.querySelector('.masthead').addEventListener('click', () => {
-  currentTheme = (currentTheme + 1) % themes.length;
-  document.body.className = themes[currentTheme].name === 'default' ? '' : `theme-${themes[currentTheme].name}`;
-  localStorage.setItem('neon-serpent-theme', String(currentTheme));
+if (themeBtn) {
+  themeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    applyTheme(currentTheme + 1);
+  });
+}
+document.querySelector('.masthead')?.addEventListener('click', () => {
+  applyTheme(currentTheme + 1);
 });
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('./service-worker.js').catch(() => {});

@@ -8,7 +8,7 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="apple-touch-icon" href="icons/icon.svg" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <link rel="stylesheet" href="styles.css?v=9" />
+    <link rel="stylesheet" href="styles.css?v=13" />
   </head>
   <body>
     <main class="game-shell">
@@ -21,6 +21,10 @@
         <div><span>SCORE</span><strong id="score">000</strong></div>
         <div><span>LEVEL</span><strong id="level">01</strong></div>
         <div><span>BEST</span><strong id="best">000</strong></div>
+        <button id="theme-btn" class="theme-toggle" type="button" aria-label="Switch Theme">
+          <span>THEME</span>
+          <strong id="theme-label">NEON</strong>
+        </button>
       </section>
       <section class="playfield" aria-label="Cyberpunk Snake game">
         <canvas id="game" aria-label="Game board"></canvas>
@@ -30,6 +34,6 @@
         </div>
       </section>
     </main>
-    <script type="module" src="app.js?v=9"></script>
+    <script type="module" src="app.js?v=13"></script>
   </body>
 </html>
