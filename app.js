@@ -57,6 +57,7 @@ let lastFrame = 0;
 let elapsed = 0;
 let best = Number(localStorage.getItem('neon-serpent-best') || 0);
 let touchStart = null;
+let previousSnake = game.snake.map(part => ({ ...part }));
 
 // Decouple drawing-buffer resolution from CSS display size.
 // The canvas has no width/height HTML attributes, so the layout is driven
@@ -76,6 +77,7 @@ new ResizeObserver((entries) => {
   if (game.rows !== newRows) {
     game.rows = newRows;
     game.reset();
+    previousSnake = game.snake.map((part) => ({ ...part }));
     updateHud();
     updateOverlay();
   }
@@ -131,10 +133,24 @@ function drawFood(time) {
   context.restore();
 }
 
-function drawSnake() {
+function drawSnake(progress = 1) {
   const t = themes[currentTheme];
   const pad = Math.max(2, Math.round(cell * 0.08));
-  game.snake.slice().reverse().forEach((part, index, parts) => {
+  
+  // Interpolate between previous state and current state for liquid-smooth movement
+  const interpolatedSnake = game.snake.map((curr, i) => {
+    const prev = previousSnake[i] || previousSnake[previousSnake.length - 1] || curr;
+    // Check for wrapping or non-adjacent teleportation (e.g. wall wrap or reset)
+    if (Math.abs(curr.x - prev.x) > 1 || Math.abs(curr.y - prev.y) > 1) {
+      return { x: curr.x, y: curr.y };
+    }
+    return {
+      x: prev.x + (curr.x - prev.x) * progress,
+      y: prev.y + (curr.y - prev.y) * progress,
+    };
+  });
+
+  interpolatedSnake.slice().reverse().forEach((part, index, parts) => {
     const x = part.x * cell; const y = part.y * cell; const isHead = index === parts.length - 1;
     context.save(); context.shadowBlur = isHead ? 24 : 16; context.shadowColor = t.snakeGlow; 
     context.fillStyle = isHead ? t.snakeHeadOut : t.snakeBodyOut; context.fillRect(x + pad, y + pad, cell - pad * 2, cell - pad * 2);
@@ -144,14 +160,17 @@ function drawSnake() {
   });
 }
 
-function draw(time) { if (!cell) return; drawGrid(time); drawFood(time); drawSnake(); }
+function draw(time, progress = 1) { if (!cell) return; drawGrid(time); drawFood(time); drawSnake(progress); }
 function handleDirection(direction) {
   if (game.status !== 'playing') game.start();
   game.setDirection(direction);
   updateOverlay();
 }
 function startOrRestart() {
-  if (game.status === 'gameover') game.reset();
+  if (game.status === 'gameover') {
+    game.reset();
+    previousSnake = game.snake.map((part) => ({ ...part }));
+  }
   game.start();
   elapsed = 0;
   updateHud();
@@ -165,13 +184,15 @@ function loop(time) {
       elapsed %= game.speed;
       const scoreBefore = game.score;
       const statusBefore = game.status;
+      previousSnake = game.snake.map((part) => ({ ...part }));
       game.step();
       if (game.score > scoreBefore) sounds.pickup();
       if (statusBefore === 'playing' && game.status === 'gameover') sounds.gameOver();
       updateHud(); updateOverlay();
     }
   }
-  draw(time); requestAnimationFrame(loop);
+  const progress = game.status === 'playing' ? Math.min(1, Math.max(0, elapsed / game.speed)) : 1;
+  draw(time, progress); requestAnimationFrame(loop);
 }
 
 window.addEventListener('keydown', (event) => {
