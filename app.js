@@ -68,13 +68,19 @@ new ResizeObserver((entries) => {
   const { width, height } = entries[0].contentRect;
   if (width <= 0 || height <= 0) return;
   const dpr = window.devicePixelRatio || 1;
-  canvas.width  = Math.round(width * dpr);
-  canvas.height = Math.round(height * dpr);
-  
-  cell = canvas.width / game.columns;
-  const newRows = Math.floor(canvas.height / cell);
-  
-  if (game.rows !== newRows) {
+
+  // Mobile (<= 768px) keeps 20 columns for optimal touch feel.
+  // Desktop/laptop screens scale columns dynamically so cells stay ~22px and fill the widescreen display.
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  const newCols = isMobile ? 20 : Math.max(20, Math.round(width / 22));
+
+  canvas.width = Math.round(width * dpr);
+  cell = canvas.width / newCols;
+  const newRows = Math.max(12, Math.floor((height * dpr) / cell));
+  canvas.height = Math.round(newRows * cell);
+
+  if (game.columns !== newCols || game.rows !== newRows) {
+    game.columns = newCols;
     game.rows = newRows;
     game.reset();
     previousSnake = game.snake.map((part) => ({ ...part }));
