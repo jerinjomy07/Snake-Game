@@ -52,3 +52,14 @@ test('assigns a cyberpunk fruit type when placing food', () => {
   const game = createGame(() => 0.99);
   assert.equal(game.food.fruit, 'berry');
 });
+
+test('supports custom baseSpeed for responsive desktop/mobile pacing', () => {
+  const laptopGame = new SnakeGame({ columns: 45, rows: 25, baseSpeed: 108 });
+  assert.equal(laptopGame.speed, 108);
+  laptopGame.status = 'playing';
+  laptopGame.score = 5;
+  laptopGame.snake = [{ x: 5, y: 5 }, { x: 4, y: 5 }, { x: 3, y: 5 }];
+  laptopGame.food = { x: 6, y: 5 };
+  laptopGame.step();
+  assert.equal(laptopGame.speed, 108 - 13);
+});

@@ -9,10 +9,11 @@ const OPPOSITES = { up: 'down', down: 'up', left: 'right', right: 'left' };
 const FRUITS = ['apple', 'cherry', 'citrus', 'berry'];
 
 export class SnakeGame {
-  constructor({ columns, rows, random = Math.random }) {
+  constructor({ columns, rows, random = Math.random, baseSpeed = 145 }) {
     this.columns = columns;
     this.rows = rows;
     this.random = random;
+    this.baseSpeed = baseSpeed;
     this.reset();
   }
 
@@ -27,7 +28,7 @@ export class SnakeGame {
     this.direction = 'right';
     this.pendingDirection = 'right';
     this.score = 0;
-    this.speed = 145;
+    this.speed = this.baseSpeed;
     this.status = 'ready';
     this.placeFood();
   }
@@ -66,7 +67,7 @@ export class SnakeGame {
     this.snake.unshift(nextHead);
     if (ate) {
       this.score += 1;
-      this.speed = Math.max(55, 145 - Math.floor(this.score / 5) * 13);
+      this.speed = Math.max(45, this.baseSpeed - Math.floor(this.score / 5) * 13);
       this.placeFood();
     } else {
       this.snake.pop();

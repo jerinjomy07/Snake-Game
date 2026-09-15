@@ -69,19 +69,22 @@ new ResizeObserver((entries) => {
   if (width <= 0 || height <= 0) return;
   const dpr = window.devicePixelRatio || 1;
 
-  // Mobile (<= 768px) keeps 20 columns for optimal touch feel.
-  // Desktop/laptop screens scale columns dynamically so cells stay ~22px and fill the widescreen display.
+  // Mobile (<= 768px) keeps 20 columns and 145ms starting speed.
+  // Desktop/laptop screens scale columns dynamically (~22px cells).
+  // Because laptop grids have more horizontal distance, start slightly faster (108ms vs 145ms).
   const isMobile = window.matchMedia('(max-width: 768px)').matches;
   const newCols = isMobile ? 20 : Math.max(20, Math.round(width / 22));
+  const newBaseSpeed = isMobile ? 145 : 108;
 
   canvas.width = Math.round(width * dpr);
   cell = canvas.width / newCols;
   const newRows = Math.max(12, Math.floor((height * dpr) / cell));
   canvas.height = Math.round(newRows * cell);
 
-  if (game.columns !== newCols || game.rows !== newRows) {
+  if (game.columns !== newCols || game.rows !== newRows || game.baseSpeed !== newBaseSpeed) {
     game.columns = newCols;
     game.rows = newRows;
+    game.baseSpeed = newBaseSpeed;
     game.reset();
     previousSnake = game.snake.map((part) => ({ ...part }));
     updateHud();
