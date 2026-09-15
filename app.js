@@ -10,6 +10,33 @@ const bestElement = document.querySelector('#best');
 const overlay = document.querySelector('#overlay');
 const game = new SnakeGame({ columns: 20, rows: 20 });
 const sounds = new SoundEffects();
+const themes = [
+  {
+    name: 'default',
+    gridBg: '#080912',
+    gridLine: 'rgba(130, 64, 225, .19)',
+    gridPulse: (time) => `rgba(60, 10, 105, ${.12 + Math.sin(time / 700) * .05})`,
+    snakeGlow: '#00ff72',
+    snakeHeadOut: '#bcffd0',
+    snakeHeadIn: '#00d85c',
+    snakeBodyOut: '#39ed79',
+    snakeBodyIn: '#0cac47'
+  },
+  {
+    name: 'synthwave',
+    gridBg: '#0a0310',
+    gridLine: 'rgba(255, 0, 128, .19)',
+    gridPulse: (time) => `rgba(120, 0, 60, ${.12 + Math.sin(time / 700) * .05})`,
+    snakeGlow: '#00f0ff',
+    snakeHeadOut: '#e0ffff',
+    snakeHeadIn: '#00d0ff',
+    snakeBodyOut: '#40d0ff',
+    snakeBodyIn: '#00a0e0'
+  }
+];
+let currentTheme = Number(localStorage.getItem('neon-serpent-theme') || 0);
+if (themes[currentTheme].name !== 'default') document.body.className = `theme-${themes[currentTheme].name}`;
+
 let cell = 0; // recomputed on every resize via ResizeObserver
 let lastFrame = 0;
 let elapsed = 0;
@@ -58,8 +85,9 @@ function updateHud() {
 }
 
 function drawGrid(time) {
-  context.fillStyle = '#080912'; context.fillRect(0, 0, canvas.width, canvas.height);
-  context.strokeStyle = 'rgba(130, 64, 225, .19)'; context.lineWidth = 1;
+  const t = themes[currentTheme];
+  context.fillStyle = t.gridBg; context.fillRect(0, 0, canvas.width, canvas.height);
+  context.strokeStyle = t.gridLine; context.lineWidth = 1;
   for (let x = 0; x <= game.columns; x += 1) {
     const offset = x * cell + .5;
     context.beginPath(); context.moveTo(offset, 0); context.lineTo(offset, canvas.height); context.stroke();
@@ -68,7 +96,7 @@ function drawGrid(time) {
     const offset = y * cell + .5;
     context.beginPath(); context.moveTo(0, offset); context.lineTo(canvas.width, offset); context.stroke();
   }
-  context.fillStyle = `rgba(60, 10, 105, ${.12 + Math.sin(time / 700) * .05})`; context.fillRect(0, 0, canvas.width, canvas.height);
+  context.fillStyle = t.gridPulse(time); context.fillRect(0, 0, canvas.width, canvas.height);
 }
 
 function drawFood(time) {
@@ -89,11 +117,13 @@ function drawFood(time) {
 }
 
 function drawSnake() {
+  const t = themes[currentTheme];
   const pad = Math.max(2, Math.round(cell * 0.08));
   game.snake.slice().reverse().forEach((part, index, parts) => {
     const x = part.x * cell; const y = part.y * cell; const isHead = index === parts.length - 1;
-    context.save(); context.shadowBlur = isHead ? 24 : 16; context.shadowColor = '#00ff72'; context.fillStyle = isHead ? '#bcffd0' : '#39ed79'; context.fillRect(x + pad, y + pad, cell - pad * 2, cell - pad * 2);
-    context.fillStyle = isHead ? '#00d85c' : '#0cac47'; context.fillRect(x + pad * 2, y + pad * 2, cell - pad * 4, cell * .18);
+    context.save(); context.shadowBlur = isHead ? 24 : 16; context.shadowColor = t.snakeGlow; 
+    context.fillStyle = isHead ? t.snakeHeadOut : t.snakeBodyOut; context.fillRect(x + pad, y + pad, cell - pad * 2, cell - pad * 2);
+    context.fillStyle = isHead ? t.snakeHeadIn : t.snakeBodyIn; context.fillRect(x + pad * 2, y + pad * 2, cell - pad * 4, cell * .18);
     if (isHead) { context.fillStyle = '#ffffff'; context.fillRect(x + cell * .67, y + cell * .29, cell * .12, cell * .12); }
     context.restore();
   });
@@ -147,6 +177,11 @@ canvas.addEventListener('pointerup', (event) => {
 canvas.addEventListener('pointercancel', () => { touchStart = null; });
 overlay.addEventListener('pointerdown', (event) => {
   if (event.target.closest('[data-action="play"]')) startOrRestart();
+});
+document.querySelector('.masthead').addEventListener('click', () => {
+  currentTheme = (currentTheme + 1) % themes.length;
+  document.body.className = themes[currentTheme].name === 'default' ? '' : `theme-${themes[currentTheme].name}`;
+  localStorage.setItem('neon-serpent-theme', String(currentTheme));
 });
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('./service-worker.js').catch(() => {});

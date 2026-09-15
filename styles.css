@@ -31,3 +31,22 @@ kbd { border: 1px solid #8e64ff; border-radius: 2px; color: white; font-family: 
   #game { touch-action: none; }.controls, .desktop-hint { display: none; }
   .overlay-action { min-height: 48px; touch-action: manipulation; }
 }
+
+/* Theme Switching */
+.masthead { cursor: pointer; user-select: none; transition: opacity 0.2s; }
+.masthead:active { opacity: 0.7; }
+body.theme-synthwave { background: #0f0518; }
+body.theme-synthwave::before { background: linear-gradient(rgba(15, 5, 24, .7), rgba(15, 5, 24, .9)), repeating-linear-gradient(90deg, transparent 0 47px, rgba(255, 0, 128, .12) 48px 49px), repeating-linear-gradient(0deg, transparent 0 47px, rgba(0, 240, 255, .08) 48px 49px); }
+body.theme-synthwave::after { background: radial-gradient(ellipse at 50% 45%, rgba(60, 0, 40, .35), transparent 58%); }
+body.theme-synthwave .eyebrow, body.theme-synthwave .tagline { color: #ff61a6; }
+body.theme-synthwave h1 { text-shadow: 0 0 14px #ff007f, 0 0 38px rgba(255, 0, 128, .55); }
+body.theme-synthwave h1 span { color: #00f0ff; text-shadow: 0 0 14px #00d0ff, 0 0 36px rgba(0, 240, 255, .72); }
+body.theme-synthwave .dashboard { border-color: rgba(255, 0, 128, .48); box-shadow: 0 0 18px rgba(255, 0, 128, .16), inset 0 0 18px rgba(255, 0, 128, .06); }
+body.theme-synthwave .dashboard div + div::before { background: linear-gradient(transparent, #ff007f, transparent); }
+body.theme-synthwave .dashboard span { color: #ff85b8; }
+body.theme-synthwave .dashboard strong { text-shadow: 0 0 8px #00f0ff; }
+body.theme-synthwave .playfield { border-color: #ff007f; box-shadow: 0 0 0 3px #0a0310, 0 0 24px rgba(255, 0, 128, .6), inset 0 0 40px rgba(60, 0, 40, .68); }
+body.theme-synthwave h2 { color: #00f0ff; text-shadow: 0 0 12px #00d0ff, 0 0 30px #00f0ff; }
+body.theme-synthwave .overlay-action { background: rgba(0, 100, 120, .7); border-color: #00f0ff; box-shadow: 0 0 16px rgba(0, 240, 255, .5); color: #e0ffff; text-shadow: 0 0 8px #00f0ff; }
+body.theme-synthwave .overlay-kicker { color: #ff61a6; }
+body.theme-synthwave .overlay p:last-child { color: #ff85b8; }
